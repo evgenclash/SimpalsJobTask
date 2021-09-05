@@ -1,4 +1,10 @@
 # SimpalsJobTask
+This is a test task for Job at Simpals
+It is requesting the adverts from account Johny164 using rest API of Simpals and is storing all the data to MongoDB
+In total I have spent around 30 hours all together with studiyng new frameworks and writing the code for the task
+
+
+Instructions how to run and how does the application work
 open and run entry.py file as to start
 "http://0.0.0.0:8080/" the api request on this url will initiate the process of collecting the adverts and the features of each advert and storing them to the database
 "http://0.0.0.0:8080/api" this api request will return all the adverts stored in the database in json format 
