@@ -13,13 +13,13 @@ open and run entry.py file as to start
 in pictures file you can see the outputs.
 
 
-master file contains 2 functions, 
+**master file** contains 2 functions, 
 
-->main() is initializing all the proccesses(collecting and storing adverts to database)
+***->main()*** is initializing all the proccesses(collecting and storing adverts to database)
 
 
 
-->getAds() is returning all the data stored in the database
+**->getAds()** is returning all the data stored in the database
 
 1)is creating a MongoDB object
 
@@ -28,22 +28,24 @@ master file contains 2 functions,
 3)returns all the adverts from database
 
 
-in main()
+**in main()**
 
-adverts = SimpalsApiClient()
+
+**adverts = SimpalsApiClient()**
 
 is creating a SimpalsApiClient object and is runing the __init__() method of SimpalsApiClient
 
-->__init__()
+**->__init__()**
 
 1)creating an attribute that will store in the futures al the adverts and features
 
 2)making first request to simpals server as to count later number of pages 
 
--->getAdvertsAsync() stored in file SimpalsApiClient is collecting adverts by running 
+**-->getAdvertsAsync()** stored in file SimpalsApiClient is collecting adverts by running 
 asyncio.run(self.addAdverts())
 
---->addAdverts() 
+
+**--->addAdverts()** 
 
 1)is creating a async Session
 
@@ -53,16 +55,16 @@ asyncio.run(self.addAdverts())
 
 ---->getAdverts() and save the tasks created
 
-3.1)gets all the adverts from the page by calling 
+  3.1)gets all the adverts from the page by calling 
 
 
------>getAdvertsFromServer()
+**----->getAdvertsFromServer()**
 
-3.1.1) while loop is avoiding 429 server status (too many requests) when we get 429 server status we let the code to wait for 0.1 sec
+   3.1.1) while loop is avoiding 429 server status (too many requests) when we get 429 server status we let the code to wait for 0.1 sec
 
-3.1.2)if as response to the requests we get json content-type we return the advertsPerPage we got from server
+   3.1.2)if as response to the requests we get json content-type we return the advertsPerPage we got from server
 
-3.2)iterating through all adverts we got at step 3.1 and appending each advert to the adverts['adverts'] attribute that is of type dict and was created when 
+  3.2)iterating through all adverts we got at step 3.1 and appending each advert to the adverts['adverts'] attribute that is of type dict and was created when 
 
 SimpalsApiClient is initialized
 
@@ -71,74 +73,76 @@ SimpalsApiClient is initialized
 
 and then asyncio.run(self.addFeatures()) starts the loop of collecting features of each advert
 
---->addFeatures()
+
+
+**--->addFeatures()**
 
 1)is creating a async Session
 
 2)iterationg through all the adverts that was collected previously and asynchronously sending the requests to the Sipamls rest api by calling method 
 
----->getAdvertsFeatures()
+**---->getAdvertsFeatures()**
 
-2.1) getAdvertsFeatures() is sending request to Simpals server and gets the features of the advert by calling method
+  2.1) getAdvertsFeatures() is sending request to Simpals server and gets the features of the advert by calling method
 
------>getAdvertsFeaturesFromServer()
+**----->getAdvertsFeaturesFromServer()**
 
-2.1.1)while loop is avoiding 429 server status (too many requests) when we get 429 server status we let the code to wait for 0.1 sec
+   2.1.1)while loop is avoiding 429 server status (too many requests) when we get 429 server status we let the code to wait for 0.1 sec
 
-2.1.2)if as response to the requests we get json content-type we return the advertsPerPage we got from server
+   2.1.2)if as response to the requests we get json content-type we return the advertsPerPage we got from server
 
-2.2)appending the features to the advert it is related to
+  2.2)appending the features to the advert it is related to
 
 3)gather all the tasks
 
 
 
-mongo = MongoDB() in main() is initializing MongoDB object
+**mongo = MongoDB()** in main() is initializing MongoDB object
 
 1)is created mongoClient and the collection where all the data will be stored
 
-2)exchange = Currency() is creating an object that will check and convert the unit price and value before writing adverts to the database
+2)**exchange = Currency()** is creating an object that will check and convert the unit price and value before writing adverts to the database
 
 Currency when initialized is:
 
-2.1)parsing the bnm site
+  2.1)parsing the bnm site
 
-2.2)extracting all the currencies and rates
+  2.2)extracting all the currencies and rates
 
-2.3)returning the exchange rates from bnm 
-
-
-
-mongo.deleteAll() from main() is deleting all the adverts from DB
+  2.3)returning the exchange rates from bnm 
 
 
 
-mongo.writeInDB(advertsWithFeatures) is writing all the adverts in the DB
+**mongo.deleteAll()** from main() is deleting all the adverts from DB
+
+
+
+**mongo.writeInDB(advertsWithFeatures)** is writing all the adverts in the DB
 
 1)first of all it is calling the method currencyCheck() from exchange object
 
---->exchange.currencyCheck()
+**--->exchange.currencyCheck()**
 
-1.1)iterating through all the adverts
+  1.1)iterating through all the adverts
 
-2.1)checkig if unit is eur or usd, if yes then unit is changed to mdl and value is sent to 
+  2.1)checkig if unit is eur or usd, if yes then unit is changed to mdl and value is sent to 
 
-->currencyExchange() method
+**->currencyExchange() method
 
-2.1.1) if currency = eur value is multiplied with the currency exchange rate of eur 
+   2.1.1) if currency = eur value is multiplied with the currency exchange rate of eur 
 
-2.1.2) if currency = usd value is multiplied with the currency exchange rate of usd 
+   2.1.2) if currency = usd value is multiplied with the currency exchange rate of usd 
 
-2.2) storing the new value
+  2.2) storing the new value
 
-2.3)returning all the adverts with updated unit and value (mdl)
+  2.3)returning all the adverts with updated unit and value (mdl)
 
 3) iterating through all the adverts and inserting them to the DB
 
 
 
 
-mongo.checkForUpdates() from main() is checking for the updates 
+**mongo.checkForUpdates()** from main() is checking for the updates 
 
 1)creating new SimpalsApiClient object
 
