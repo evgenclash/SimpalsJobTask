@@ -16,6 +16,8 @@ class MongoDB:
 
     # writing all the adverts to the db
     def writeInDB(self, adverts):
+
+        # changes the unit and value to mdl if there is eur or usd
         adverts = self.exchange.currencyCheck(adverts)
 
         for i in range(len(adverts['adverts'])):
@@ -31,22 +33,24 @@ class MongoDB:
 
         # iterating through each advert from api
         advertsFromApi = adverts.getAdvertsAsync()
-        for i in range(len(advertsFromApi['adverts'])):
-            id = advertsFromApi['adverts'][i]['id']
+
+        for advertFromApi in advertsFromApi['adverts']:
+            id = advertFromApi['id']
             advertFromDB = self.collection.find_one({"id": id})
             ids.append(id)
 
             # check if it is already in the DB
             if advertFromDB == None:
                 print('added to db:' + str(id))
-                self.collection.insert_one(advertsFromApi['adverts'][i])
+                self.collection.insert_one(advertFromApi)
 
             # check if there have been made any changes
-            elif advertsFromApi['adverts'][i]['republished'] != advertFromDB['republished']:
-                self.collection.replace_one({"id": id}, advertsFromApi['adverts'][i])
+            elif advertFromApi['republished'] != advertFromDB['republished']:
+                self.collection.replace_one({"id": id}, advertFromApi)
                 print('have updated')
 
-        #     iterating through each advert from db as to check if there are any adverts that are deleted from the simpals server and deletes them if needed
+        # iterating through each advert from db as to check if there are any adverts that are deleted from the simpals
+        # server and deletes them if needed
         advertsFromDB = self.collection.find({})
         for advertFromDB in advertsFromDB:
             if advertFromDB['id'] not in ids:

@@ -7,6 +7,7 @@ import time
 def main():
     star_time = time.time()
     adverts = SimpalsApiClient()
+
     # adding the features to each advert
     advertsWithFeatures = adverts.getAdvertsAsync()
 

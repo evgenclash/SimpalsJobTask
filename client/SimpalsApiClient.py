@@ -45,7 +45,6 @@ class SimpalsApiClient:
         while advertsPerPage == '429 server status':
             async with session.get(f'{self.endPoint}?page_size={self.page_size}&page={page + 1}',
                                    auth=auth) as response:
-                print(response)
                 try:
                     advertsPerPage = await response.json()
                 except:
@@ -72,7 +71,9 @@ class SimpalsApiClient:
     # collecting each advert
     async def getAdverts(self, session, page):
         advertsPerPage = await self.getAdvertsFromServer(session, page)
+
         for advert in advertsPerPage['adverts']:
+
             # adding each advert from the page i to adverts
             self.adverts['adverts'].append(advert)
 
@@ -80,6 +81,7 @@ class SimpalsApiClient:
     async def addFeatures(self):
         tasks2 = []
         async with aiohttp.ClientSession() as session:
+            
             for advert in self.adverts['adverts']:
                 tasks = asyncio.ensure_future(self.getAdvertsFeatures(session, advert['id'], advert))
                 tasks2.append(tasks)
